@@ -1,0 +1,164 @@
+body {
+  background-color: #EEEEEE;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #393E46;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar button {
+  border-radius: 0px;
+  background-color: #222831;
+  color: #fff;
+  padding: 20px 40px;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  margin-top: 5px;
+  margin-left: auto; /* Add this property to make the buttons float to the right */
+}
+
+.placeholder {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+}
+
+/* Section Styles */
+section {
+  height: calc(100vh - 50px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  scroll-snap-align: start;
+  color: black;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+.section-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  height: 90%;
+  margin: 10px;
+}
+
+.left-portion,
+.right-portion {
+  flex-basis: 45%;
+  padding: 20px;
+  text-align: center;
+  background-color: white;
+}
+
+/* Button Styles */
+button {
+  border-radius: 50px;
+  background-color: #222831;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 10px;
+}
+button[type="submit"]{
+  font-size:18px;
+  border-radius: 5px;
+  width: 100%;
+}
+.nutriment-add{
+  border-radius: 25px;
+  background-color: #222831;
+  color: #fff;
+  padding: 15px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 5px;
+}
+.logo {
+  text-decoration: none;
+  padding: 5px;
+  transition: all 1s ease;
+}
+.nutriment-count{
+  font-size: 28px;
+}
+button:hover{
+  background-color: #424953;
+}
+/* Global Styles */
+.container {
+  margin-top: 0;
+  margin-right: 150px;
+}
+
+.login-form {
+  text-align: center;
+  
+}
+a{
+  text-decoration: none;
+  color:inherit;
+}
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-top:15px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 95%;
+  padding: 9px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+} 
+input[type="number"] {
+  width: 25%;
+  height: 25px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.antimsp {
+  margin-top: 20px;
+}
+.sign-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80%;
+  margin: 0;
+}
+#added-foods {
+  margin-bottom: 20px;
+  padding: 10px;
+  height: 100%;
+  background-color: #a5a5a5;
+  border-top-left-radius: 5px;
+  border: 2px solid #242b36;
+            
+  }
+
+/* Optional: Add more custom styles as needed */

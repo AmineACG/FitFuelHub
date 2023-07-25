@@ -12,8 +12,21 @@ try {
     // Connect to the database
     $db = new PDO($dsn, $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     // Retrieve the food table with nutriment values
+    $query = "SELECT * FROM user WHERE user_id = :user_id";
+    $stmt = $db->prepare($query);
+    $stmt->execute([':user_id' => $_SESSION['user_id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Assign user data to variables
+        $fullName = $user['username'];
+        $email = $user['email'];
+        $gender = $user['sex'];
+        $birthday = $user['birthday'];
+        $height = $user['height'];
+        $weight = $user['weight'];
+        $joinDate = $user['created_at'];
+        $plan = $user['plan'];
     $query = "SELECT * from food_item";
     $stmt = $db->query($query);
     $foodItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -66,6 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <style>
+        .navbar {
+            background-color: #222831;
+            display: flex;
+            align-items: center;
+        }
         .right-portion {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -89,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 20px;
         }
         #added-foods {
+    
             background-color:#393E46;
             margin-bottom: 20px;
             padding: 10px;
@@ -98,8 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height:120px;
             width: 95%;
             border: 3px solid #242b36;
-
             
+            }
+            #added-foods button{
+                border: solid 2px green;
             }
     </style>
     <script>
@@ -166,22 +187,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     newButton.innerText = foodName;
     addedFoodsElement.appendChild(newButton);
 }
+    
+    var Weight = <?php echo $weight ?>;
+    var Height = <?php echo $height ?>;
 
-
+    var hm = Height / 100;
+    var BMI = Weight / (hm * hm);
+    console.log(BMI);
+    
     </script>
     <nav class="navbar">
-    <a href="home.php" class="logo">
-            <img class="logo" src="images/FitHub.png"><img>  
-        </a>
-        <button href="#">Diet</button>
-        <button href="#">Training</button>
-        <a href="logout.php"><button>Log Out</button></a>
-    </nav>
+        <a href="home.php" class="logo"><img class="logo" src="images/FitHub.png"><img>  </a>
+        <a href="meal-maker.php"><button>Make A Meal</button></a>
+        <a href="recipes.php"><button>Recipes</button></a>
+        <a href="#" ><button>Training</button></a>
+        <!--{"Contact Us"}-->
+  </nav>
     <section id="section1">
         <div class="section-content"style="align-items: start;">
             <div class="left-portion">
                 <h1>Add To My Meal</h1>
-                <h4>Foods are measured by 100g</h1>
+                <h4>Tip: Select A Diverse Amount of Food</h4>
+                <h4>Foods are measured by 100g</h4>
                 <?php foreach ($foodItems as $food) { ?>
                     <button class="nutriment-add" onclick="incrementNutrition('<?php echo $food['food_name']; ?>', <?php echo $food['calories']; ?>, <?php echo $food['protein']; ?>, <?php echo $food['fat']; ?>, <?php echo $food['carbohydrates']; ?>);">
                         <?php echo $food['food_name']; ?>
@@ -190,25 +217,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <!-- Display the total nutriment values -->
+            
             <div class="right-portion">
+                
                 <section style="height: fit-content">
-                    <h1>Perfect!</h1>
+                <h2>Recommended values for a <?php echo $plan?> plan:</h2>
                 </section><br>
-                <label>Carbs</label>
+                <label>Carbs : 72g</label>
                 <button class="nutriment-count" id="nutriment-count-carbs"><?php echo $totalCarbs; ?>g</button>
-                <label>Fat</label>
+                <label>Fat : 12g</label>
                 <button class="nutriment-count" id="nutriment-count-fat"><?php echo $totalFat; ?>g</button>
-                <label>Calories</label>
+                <label>Calories : 1200Kcal</label>
                 <button class="nutriment-count" id="nutriment-count-calories"><?php echo $totalCalories; ?>kcal</button>
-                <label>Protein</label>
+                <label>Protein : 53g</label>
                 <button class="nutriment-count" id="nutriment-count-protein"><?php echo $totalProtein; ?>g</button>
                 
                 </form>
             </div>
             
-        </div>
-        <div id="added-foods"><!--Foods get added here --></div>
-        <form id="meal-form" method="post" action="">
+        </div><form id="meal-form" method="post" action="">
         <input type="hidden" id="totalCarbs" name="totalCarbs" required>
         <input type="hidden" id="totalFat" name="totalFat" required>
         <input type="hidden" id="totalCalories" name="totalCalories" required>
@@ -217,6 +244,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" id="meal_name" name="meal_name" required>   
             <button type ="submit" id = "save-meal-button">Save As Custom</button>
         </form>
+        <div id="added-foods"><!--Foods get added here --></div>
+        
     </section>
 </body>
 </html>

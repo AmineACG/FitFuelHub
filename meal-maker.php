@@ -1,7 +1,10 @@
 <?php
 session_start();
 // Check if the user is not logged in and redirect to the login page if necessary
-
+if (!isset($_SESSION['user_id'])) {
+    header("Location: SignUp.php");
+    exit();
+}
 
 // Retrieve form data
 $dsn = 'mysql:host=localhost;dbname=fitfuelhub_db';
@@ -27,6 +30,11 @@ try {
         $weight = $user['weight'];
         $joinDate = $user['created_at'];
         $plan = $user['plan'];
+        if($plan === 1){
+            $parsedPlan = "Cut";
+        }else if($plan === 2){
+            $parsedPlan = "Bulk";
+        }
     $query = "SELECT * from food_item";
     $stmt = $db->query($query);
     $foodItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -187,14 +195,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     newButton.innerText = foodName;
     addedFoodsElement.appendChild(newButton);
 }
-    
-    var Weight = <?php echo $weight ?>;
-    var Height = <?php echo $height ?>;
+     
 
-    var hm = Height / 100;
-    var BMI = Weight / (hm * hm);
-    console.log(BMI);
-    
     </script>
     <nav class="navbar">
         <a href="home.php" class="logo"><img class="logo" src="images/FitHub.png"><img>  </a>
@@ -221,15 +223,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="right-portion">
                 
                 <section style="height: fit-content">
-                <h2>Recommended values for a <?php echo $plan?> plan:</h2>
+                <h2>Recommended values for a <?php echo $parsedPlan?> plan:</h2>
                 </section><br>
-                <label>Carbs : 72g</label>
+                <p>Carbohydrates Intake: <span id="carbin"></span></p>
                 <button class="nutriment-count" id="nutriment-count-carbs"><?php echo $totalCarbs; ?>g</button>
-                <label>Fat : 12g</label>
+                <p>Fat Intake: <span id="fatin"></span></p>
                 <button class="nutriment-count" id="nutriment-count-fat"><?php echo $totalFat; ?>g</button>
-                <label>Calories : 1200Kcal</label>
+                <p>Calories Intake: <span id="calin"></span></p>
                 <button class="nutriment-count" id="nutriment-count-calories"><?php echo $totalCalories; ?>kcal</button>
-                <label>Protein : 53g</label>
+                <p>Protein Intake: <span id="proin"></span></p>
                 <button class="nutriment-count" id="nutriment-count-protein"><?php echo $totalProtein; ?>g</button>
                 
                 </form>
@@ -248,4 +250,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
     </section>
 </body>
+<script>
+    //Initial Intakes Setup
+var Weight = <?php echo $weight ?>;
+var Height = <?php echo $height ?>;
+var hm = Height / 100;
+var BMI = Weight / (hm * hm);
+console.log(BMI);
+
+var proteinIntake;
+var CaloriesIntake;
+var fatIntake;
+var remainingCalories;
+
+//2 is bulk, 1 is cut
+let plan = <?php echo $plan?>;
+switch (plan) {
+    case 1:
+        //Cut
+        proteinIntake = CalculateProteinIntake(Weight, plan);
+        CaloriesIntake = CalculateCalories(Weight, plan);
+        fatIntake = CalculateFats(CaloriesIntake, plan);
+        remainingCalories = CalculateCarbohydrates(CaloriesIntake, proteinIntake, fatIntake);
+        break;
+    case 2:
+        //Bulk
+        proteinIntake = CalculateProteinIntake(Weight, plan);
+        CaloriesIntake = CalculateCalories(Weight, plan);
+        fatIntake = CalculateFats(CaloriesIntake, plan);
+        remainingCalories = CalculateCarbohydrates(CaloriesIntake, proteinIntake, fatIntake);
+        break;
+    // Add more cases for other plans if needed
+}
+
+// Update HTML elements with the calculated values
+document.getElementById('proin').innerHTML = proteinIntake.toFixed(1);
+document.getElementById('calin').innerHTML = CaloriesIntake.toFixed(1);
+document.getElementById('fatin').innerHTML = fatIntake.toFixed(1);
+document.getElementById('carbin').innerHTML = (remainingCalories / 4).toFixed(1);
+
+// Functions to calculate intake based on the plan
+function CalculateProteinIntake(w, plan) {
+    if (plan == 1) {
+        return w / 1.5;
+    } else if (plan == 2) {
+        return w / 1.7;
+    } else {
+        return w / 1.6;
+    }
+}
+
+function CalculateCalories(w, plan) {
+    if (plan == 1) {
+        return w * 1.2 + 600;
+    } else if (plan == 2) {
+        return w * 1.0 + 400;
+    } else {
+        return w * 1.1 + 200;
+    }
+}
+
+function CalculateFats(totalCalories, plan) {
+    if (plan == 1) {
+        return 0.2 * totalCalories / 9;
+    } else if (plan == 2) {
+        return 0.3 * totalCalories / 9;
+    } else {
+        return 0.25 * totalCalories / 9;
+    }
+}
+
+function CalculateCarbohydrates(totalCalories, proteinIntake, fatIntake) {
+    let remainingCalories = totalCalories - (proteinIntake * 4 + fatIntake * 9);
+    return remainingCalories / 4;
+}
+  
+    </script>
 </html>

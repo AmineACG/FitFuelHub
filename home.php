@@ -21,7 +21,6 @@ if (isset($_SESSION['user_id'])) {
     $stmt = $db->prepare($query);
     $stmt->execute([':user_id' => $_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
     $loggedInUser = $user['username'];
 }
 ?>
@@ -30,8 +29,13 @@ if (isset($_SESSION['user_id'])) {
 <html>
 <head>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>FUEL FitHub</title>
     <style>
+      h2{
+        font-size :55px;
+        color:white;
+      }
         body {
             background-color: #EEEEEE;
             margin: 0;
@@ -40,20 +44,24 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .navbar {
-            background-color: #222831;
-            display: flex;
-            align-items: center;
+          background: linear-gradient(to right, black, #222831);
+          padding: 10px;
+          display: flex;
+          align-items: center;
         }
 
         .navbar button {
             border-radius: 0px;
-            background-color: #222831;
+            background-color: inherit;
             color: #fff;
             padding:fit-content 50px;
             border: none;
             cursor: pointer;
             font-size: 20px;
-            margin-left: auto; /* Add this property to make the buttons float to the right */
+            float:right;
+        }
+        .navbar button:hover{
+          background-color: #424953;
         }
 
         .placeholder {
@@ -72,32 +80,60 @@ if (isset($_SESSION['user_id'])) {
             align-items: center;
             scroll-snap-align: start;
             color: black;
+          }
+
+          h1 {
+              font-size: 40px;
+          }
+
+          .section-content {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+              width: 95%;
+              height: 90%;
+              margin: 0px;
+              color:white;
+          }
+
+          .left-portion,
+          .right-portion {
+              flex-basis: 45%;
+              padding: 20px;
+              text-align: center;
+              background-color: inherit;
+
+          }
+          .popup {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.7);
+          z-index: 9999;
         }
 
-        h1 {
-            font-size: 40px;
+        .popup-content {
+          background-color: #fff;
+          max-width: 400px;
+          margin: 100px auto;
+          padding: 20px;
+          border-radius: 5px;
         }
 
-        .section-content {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            width: 95%;
-            height: 90%;
-            margin: 0px;
-            color:white;
+        .close {
+          position: absolute;
+          top: 10px;
+          right: 20px;
+          font-size: 24px;
+          cursor: pointer;
         }
 
-        .left-portion,
-        .right-portion {
-            flex-basis: 45%;
-            padding: 20px;
-            text-align: center;
-            background-color: inherit;
-
-        }
-
+      /* Add blur effect to the background when the popup is shown */
+      
         /* Button Styles */
         button {
             border-radius: 50px;
@@ -141,7 +177,7 @@ if (isset($_SESSION['user_id'])) {
 
         input[type="text"],
         input[type="password"] {
-            width: 100%;
+            width: 92%;
             padding: 9px;
             height: 17px;
             border-radius: 5px;
@@ -179,40 +215,126 @@ if (isset($_SESSION['user_id'])) {
         }
 
         /* Custom Styles */
-        .section2-image,
-        .section3-image {
+        .section2-image{
             width: 500px;
             height: 500px;
             object-fit: cover;
             border-radius: 50%;
             
         }
+        .section3-image {
+            width: 750px;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 10%;
+
+        }
         button{padding:20px 20px;}
-        .mesh{
-  background-color: #222831;
-  width: 95%;
-}
+            .mesh{
+          background-color: #222831;
+          width: 95%;
+        }
+        footer {
+          background-color: #f5f5f5;
+          padding: 20px 0;
+        }
+
+        .footer-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          color:black;
+
+        }
+
+        .footer-left,
+        .footer-right {
+          width: 45%;
+          
+        }
+
+        .footer-left h4,
+        .footer-right h4 {
+          margin-bottom: 10px;
+        }
+
+        .footer-bottom {
+          background-color: #ebebeb;
+          padding: 10px 0;
+          text-align: center;
+        }
+        .logo{
+          height:128px;
+        }
     </style>
 </head>
 <body>
   <nav class="navbar">
-        <a href="#" class="logo"><img class="logo" src="images/FitHub.png"><img>  </a>
-        <a href="meal-maker.php"><button>Make A Meal</button></a>
-        <a href="recipes.php"><button>Recipes</button></a>
-        <a href="#" ><button>Training</button></a>
+        <a href="#" class="logo"><img class="logo" src="images/logo.png"><img>  </a>
+        
         <!--{"Contact Us"}-->
-    <?php if (isset($_SESSION['user_id'])) { ?>
-      <a href="profile.php"><button class="login-button"><?php echo $loggedInUser; ?></button></a>
-    <?php } else { ?>
-    <a href="login.php"><button class="login-button">Log In</button></a>
-    <?php } ?>
+        <?php if (isset($_SESSION['user_id'])) { ?>
+          <a href="meal-maker.php">
+            <button><i class="fas fa-utensils"></i> Make A Meal</button>
+          </a>
+          <a href="recipes.php">
+            <button><i class="fas fa-book-open"></i> Recipes</button>
+          </a>
+          <a href="#">
+            <button><i class="fas fa-dumbbell"></i> Training</button>
+          </a>
+          <button><a href="profile.php"><i class="fas fa-user"></i> <?php echo $loggedInUser; ?></a></button>
+        <?php } else { ?>
+          <button onclick="showPopup()" style="color:inherit;background-color:white;">
+            <i class="fas fa-sign-in-alt"></i> <a style="">Log In</a>
+          </button>
+          <a style="" href="SignUp.php">
+            <button><i class="fas fa-user-plus"></i> Sign Up</button>
+          </a>
+        <?php } ?>
   </nav>
-  
+      <div id="loginPopup" class="popup">
+      <div class="popup-content">
+      <img style="width:380px;"class="logo" src="images/logo.png"><img>
+        <form action="login.php" method="post">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+          </div>
+          <button style="width: 97%;" type="submit">Login</button>
+          <div>
+            <label><strong>Don't have an account? </strong><a href="signup.php"><strong><i>Sign Up</i></strong></a></label>
+          </div>
+        </form>
+        <button class="close" onclick="closePopup()">X</button>
+      </div>
+    </div>
   <div class="left-portion">
     <h1>The ULTIMATE Destination for Real-Time<br> Transformation and Unparalleled<br> Experiences..</h1>
-    <button class="button">Learn More</button>
-  </div>
+    <h3>Fithub | Whit Clear Goals ... Comes Discipline</h3>
+    <?php if (isset($_SESSION['user_id'])) { ?>
 
+      <?php } else { ?>
+        <a href ="SignUp.php"><button style="font-size:30px;" class="button">Start for free   </button></a>
+        <?php } ?>
+  </div>
+<script>
+  function showPopup() {
+    document.getElementById("loginPopup").style.display = "block";
+    document.body.classList.add("blur-background");
+  }
+
+  function closePopup() {
+    document.getElementById("loginPopup").style.display = "none";
+    document.body.classList.remove("blur-background");
+  }
+  </script>
   <section id="section2">
   <div class="mesh">
         <h1></h1>
@@ -222,13 +344,13 @@ if (isset($_SESSION['user_id'])) {
       <div class="left-portion">
         <!-- Left portion content in Section 2 -->
         <h2>Prepared recipes </h2>
-        <p>Explore a treasure trove of diverse and delicious recipes that will tantalize your taste buds and satisfy your cravings. From savory main courses to delectable desserts, our collection covers a wide array of culinary delights to suit every palate.</p>
-        <button class="button" style="font-size:28px;">Explore Our Recipes</button>
+        <p>Explore a treasure of diverse and delicious recipes that will tantalize your taste buds and satisfy your cravings. From savory main courses to delectable desserts, our collection covers a wide array of culinary delights to suit every palate.</p>
+        <a href ="recipes.php"><button class="button" style="font-size:28px;">Explore Our Recipes</button></a>
       </div>
       
       <div class="right-portion" >
         <!-- Right portion content in Section 2 -->
-        <img class="section2-image"  src="images/cyb_enter.jpg" alt="Section 2 Image">
+        <img class="section2-image"  src="images/recipes.jpg" alt="Section 2 Image">
       </div>
     </div>
   </section>
@@ -239,7 +361,7 @@ if (isset($_SESSION['user_id'])) {
     </div>
     <div class="section-content" style = "background-color:#393E46;font-size:24px;">
       <div class="left-portion" >
-      <img  class="section3-image" src="images/fem_eating.jpg"  alt="Section 3 Image">
+      <img  class="section3-image" src="images/mealmaker.png"  alt="Section 3 Image">
 
       </div>
       
@@ -280,9 +402,25 @@ if (isset($_SESSION['user_id'])) {
       
       <div class="right-portion" >
         <!-- Right portion content in Section 2 -->
-        <img class="section2-image"  src="images/cyb_enter.jpg" alt="Section 2 Image">
+        <img class="section2-image"  src="images/Fithub.png" alt="Section 2 Image">
       </div>
     </div>
   </section>
+  <footer>
+    <div class="footer-container">
+      <div class="footer-left">
+        <h4>About Us</h4>
+        <p>Welcome to our news website, your trusted source for timely and reliable news coverage. At OnTheDot, we are committed to delivering high-quality journalism and keeping you informed about the latest happenings across various topics.</p>
+      </div>
+      <div class="footer-right">
+        <h4>Contact Us</h4>
+        <p>Email: med.amine.birje@example.com</p>
+        <p>Phone: 0772441117</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 FitFuelHub. All rights reserved.</p>
+    </div>
+  </footer>
 </body>
 </html>

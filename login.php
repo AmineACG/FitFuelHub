@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <nav class="navbar">
     <a href="home.php" class="logo">
-            <img class="logo" src="images/FitHub.png"><img>  
+        <a href="#" class="logo"><img class="logo" src="images/logo.png"><img>  </a>
         </a>
     </nav>
     <main class="sign-form">

@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <nav class="navbar">
     <a href="home.php" class="logo">
-            <img class="logo" src="images/FitHub.png"><img>  
+            <img class="logo" src="images/logo.png"><img>  
         </a>
     </nav>
     <main class="sign-form">
@@ -102,8 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" id="password" name="password" required>
                 </div>
                 <div class="form-group">
-                    <label for="birthday"><strong>Birth-date</strong></label>
-                    <input type="date" id="birthday" name="birthday" required>
+                    <label for="birthday"><strong>Age   </strong></label>
+                    <input type="number" id="birthday" name="birthday" required>
                 </div>
                 <div class="form-group">
 
@@ -123,12 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="number" id="weight" name="weight" required>Kg
                 </div>
                 <div class="form-group">
-
+                    
                     <label for="plan">Bulk</label>
-                    <input type="radio" id="plan" name="plan" value="Bulk" required>
+                    <input type="radio" id="plan" name="plan" value="2" required>
 
                     <label for="plan">Cut</label>
-                    <input type="radio" id="plan" name="plan" value="Cut" required>
+                    <input type="radio" id="plan" name="plan" value="1" required>
 
                 </div>
                 <button type="submit">Sign Up</button><br>

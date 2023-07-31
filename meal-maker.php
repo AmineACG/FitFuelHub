@@ -82,15 +82,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meal Making</title>
 </head>
 <body>
     <style>
         .navbar {
-            background-color: #222831;
-            display: flex;
-            align-items: center;
+            background: linear-gradient(to right, black, #222831);
+          padding: 10px;
+          display: flex;
+          align-items: center;
         }
         .right-portion {
             display: grid;
@@ -105,7 +107,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-align: center;
             font-size: 25px;
         }
-
+        .logo{
+          height:128px;
+        }
+        .navbar button {
+            border-radius: 0px;
+            background-color: inherit;
+            color: #fff;
+            padding:fit-content 50px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            float:right;
+        }
+        .navbar button:hover{
+          background-color: #424953;
+        }
         .right-portion button {
             border-radius: 25px;
             background-color: #222831;
@@ -114,24 +131,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: none;
             font-size: 20px;
         }
+        .addedfoodfield{
+            width: 1300px;            
+            border-radius:15px;
+        }
         #added-foods {
-    
-            background-color:#393E46;
-            margin-bottom: 20px;
-            padding: 10px;
-            height: 100%;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            height:120px;
-            width: 95%;
-            border: 3px solid #242b36;
-            
-            }
-            #added-foods button{
-                border: solid 2px green;
-            }
+
+        background-color:transparent;
+        border:none;
+        }
+        #added-foods button{
+            border: solid 2px green;
+        }
+        .popup {
+    position: absolute;
+    padding: 20px;
+    background-color: #222831;
+    color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 1; /* Ensure the popup is above other elements */
+}
+
+.food-button:hover .popup {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    text-align: left;
+}
+
+.popup-content div {
+    line-height: 1.5;
+}
+
     </style>
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
     // Get the form and buttons
     const mealForm = document.getElementById('meal-form');
@@ -158,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mealForm.submit();
         }
     });
-});
+    });
 
 
     function incrementNutrition(foodName, calories, protein, fat, carbs) {
@@ -194,15 +239,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     var newButton = document.createElement("button");
     newButton.innerText = foodName;
     addedFoodsElement.appendChild(newButton);
-}
+    }
      
 
-    </script>
+</script>
     <nav class="navbar">
-        <a href="home.php" class="logo"><img class="logo" src="images/FitHub.png"><img>  </a>
-        <a href="meal-maker.php"><button>Make A Meal</button></a>
-        <a href="recipes.php"><button>Recipes</button></a>
-        <a href="#" ><button>Training</button></a>
+        <a href="home.php" class="logo"><img class="logo" src="images/logo.png"><img>  </a>
+        <a href="meal-maker.php">
+            <button><i class="fas fa-utensils"></i> Make A Meal</button>
+          </a>
+          <a href="recipes.php">
+            <button><i class="fas fa-book-open"></i> Recipes</button>
+          </a>
+          <a href="#">
+            <button><i class="fas fa-dumbbell"></i> Training</button>
+          </a>
         <!--{"Contact Us"}-->
   </nav>
     <section id="section1">
@@ -212,8 +263,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h4>Tip: Select A Diverse Amount of Food</h4>
                 <h4>Foods are measured by 100g</h4>
                 <?php foreach ($foodItems as $food) { ?>
-                    <button class="nutriment-add" onclick="incrementNutrition('<?php echo $food['food_name']; ?>', <?php echo $food['calories']; ?>, <?php echo $food['protein']; ?>, <?php echo $food['fat']; ?>, <?php echo $food['carbohydrates']; ?>);">
+                    <button class="food-button nutriment-add" onclick="incrementNutrition('<?php echo $food['food_name']; ?>', <?php echo $food['calories']; ?>, <?php echo $food['protein']; ?>, <?php echo $food['fat']; ?>, <?php echo $food['carbohydrates']; ?>);">
                         <?php echo $food['food_name']; ?>
+                        <div class="popup">
+                            <div class="popup-content">
+                                <div><strong>Calories:</strong> <?php echo $food['calories']; ?>Kcal</div>
+                                <div><strong>Protein:</strong> <?php echo $food['protein']; ?>g</div>
+                                <div><strong>Fat:</strong> <?php echo $food['fat']; ?>g</div>
+                                <div><strong>Carbs:</strong> <?php echo $food['carbohydrates']; ?>g</div>
+                            </div>
+                        </div>
                     </button>
                 <?php } ?>
             </div>
@@ -223,18 +282,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="right-portion">
                 
                 <section style="height: fit-content">
-                <h2>Recommended values for a <?php echo $parsedPlan?> plan:</h2>
+                <h2>Recommended values for a <?php echo $parsedPlan?> plan Based on your BMI :</h2>
                 </section><br>
-                <p>Carbohydrates Intake: <span id="carbin"></span></p>
+                <p>Carbohydrates Intake: <span id="carbin"></span>g</p>
                 <button class="nutriment-count" id="nutriment-count-carbs"><?php echo $totalCarbs; ?>g</button>
-                <p>Fat Intake: <span id="fatin"></span></p>
+                <p>Fat Intake: <span id="fatin"></span>g</p>
                 <button class="nutriment-count" id="nutriment-count-fat"><?php echo $totalFat; ?>g</button>
-                <p>Calories Intake: <span id="calin"></span></p>
+                <p>Calories Intake: <span id="calin"></span> kcal</p>
                 <button class="nutriment-count" id="nutriment-count-calories"><?php echo $totalCalories; ?>kcal</button>
-                <p>Protein Intake: <span id="proin"></span></p>
+                <p>Protein Intake: <span id="proin"></span>g</p>
                 <button class="nutriment-count" id="nutriment-count-protein"><?php echo $totalProtein; ?>g</button>
-                
                 </form>
+                
             </div>
             
         </div><form id="meal-form" method="post" action="">
@@ -242,88 +301,111 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="hidden" id="totalFat" name="totalFat" required>
         <input type="hidden" id="totalCalories" name="totalCalories" required>
         <input type="hidden" id="totalProtein" name="totalProtein" required>
-            <label for="meal_name">Meal Name:</label>
-            <input type="text" id="meal_name" name="meal_name" required>   
-            <button type ="submit" id = "save-meal-button">Save As Custom</button>
+        <label style="margin-left:30px;" for="meal_name">Meal Name:</label>
+        <fieldset class ="addedfoodfield" >
+            <legend>
+                <input class="mealname"style="background-color: #222831;transparent;padding:12px;border: solid 2px rgb(192, 192, 192);font-size:18px;color:white;" type="text" id="meal_name" name="meal_name" required></legend>
+                <div id="added-foods"><!--Foods get added here --></div>
+                <button type ="submit" id = "save-meal-button">Save As Custom</button>
+            </fieldset>
         </form>
-        <div id="added-foods"><!--Foods get added here --></div>
         
     </section>
 </body>
-<script>
-    //Initial Intakes Setup
-var Weight = <?php echo $weight ?>;
-var Height = <?php echo $height ?>;
-var hm = Height / 100;
-var BMI = Weight / (hm * hm);
-console.log(BMI);
+        <script>
+                //Initial Intakes Setup
+            var Weight = <?php echo $weight ?>;
+            var Height = <?php echo $height ?>;
+            var hm = Height / 100;
+            var BMI = Weight / (hm * hm);
+            console.log(BMI);
 
-var proteinIntake;
-var CaloriesIntake;
-var fatIntake;
-var remainingCalories;
+            var proteinIntake;
+            var CaloriesIntake;
+            var fatIntake;
+            var remainingCalories;
 
-//2 is bulk, 1 is cut
-let plan = <?php echo $plan?>;
-switch (plan) {
-    case 1:
-        //Cut
-        proteinIntake = CalculateProteinIntake(Weight, plan);
-        CaloriesIntake = CalculateCalories(Weight, plan);
-        fatIntake = CalculateFats(CaloriesIntake, plan);
-        remainingCalories = CalculateCarbohydrates(CaloriesIntake, proteinIntake, fatIntake);
-        break;
-    case 2:
-        //Bulk
-        proteinIntake = CalculateProteinIntake(Weight, plan);
-        CaloriesIntake = CalculateCalories(Weight, plan);
-        fatIntake = CalculateFats(CaloriesIntake, plan);
-        remainingCalories = CalculateCarbohydrates(CaloriesIntake, proteinIntake, fatIntake);
-        break;
-    // Add more cases for other plans if needed
-}
+            //2 is bulk, 1 is cut
+            let plan = <?php echo $plan?>;
+            switch (plan) {
+                case 1:
+                    //Cut
+                    proteinIntake = CalculateProteinIntake(Weight, plan);
+                    CaloriesIntake = CalculateCalories(Weight, plan);
+                    fatIntake = CalculateFats(CaloriesIntake, plan);
+                    remainingCalories = CalculateCarbohydrates(CaloriesIntake, proteinIntake, fatIntake);
+                    break;
+                case 2:
+                    //Bulk
+                    proteinIntake = CalculateProteinIntake(Weight, plan);
+                    CaloriesIntake = CalculateCalories(Weight, plan);
+                    fatIntake = CalculateFats(CaloriesIntake, plan);
+                    remainingCalories = CalculateCarbohydrates(CaloriesIntake, proteinIntake, fatIntake);
+                    break;
+                // Add more cases for other plans if needed
+            }
 
-// Update HTML elements with the calculated values
-document.getElementById('proin').innerHTML = proteinIntake.toFixed(1);
-document.getElementById('calin').innerHTML = CaloriesIntake.toFixed(1);
-document.getElementById('fatin').innerHTML = fatIntake.toFixed(1);
-document.getElementById('carbin').innerHTML = (remainingCalories / 4).toFixed(1);
+            // Update HTML elements with the calculated values
+            document.getElementById('proin').innerHTML = proteinIntake.toFixed(1);
+            document.getElementById('calin').innerHTML = CaloriesIntake.toFixed(1);
+            document.getElementById('fatin').innerHTML = fatIntake.toFixed(1);
+            document.getElementById('carbin').innerHTML = (remainingCalories / 4).toFixed(1);
 
-// Functions to calculate intake based on the plan
-function CalculateProteinIntake(w, plan) {
-    if (plan == 1) {
-        return w / 1.5;
-    } else if (plan == 2) {
-        return w / 1.7;
-    } else {
-        return w / 1.6;
-    }
-}
+            // Functions to calculate intake based on the plan
+            function CalculateProteinIntake(w, plan) {
+                if (plan == 1) {
+                    return w / 1.5;
+                } else if (plan == 2) {
+                    return w / 1.7;
+                } else {
+                    return w / 1.6;
+                }
+            }
 
-function CalculateCalories(w, plan) {
-    if (plan == 1) {
-        return w * 1.2 + 600;
-    } else if (plan == 2) {
-        return w * 1.0 + 400;
-    } else {
-        return w * 1.1 + 200;
-    }
-}
+            function CalculateCalories(w, plan) {
+                if (plan == 1) {
+                    return w * 1.2 + 600;
+                } else if (plan == 2) {
+                    return w * 1.0 + 400;
+                } else {
+                    return w * 1.1 + 200;
+                }
+            }
 
-function CalculateFats(totalCalories, plan) {
-    if (plan == 1) {
-        return 0.2 * totalCalories / 9;
-    } else if (plan == 2) {
-        return 0.3 * totalCalories / 9;
-    } else {
-        return 0.25 * totalCalories / 9;
-    }
-}
+            function CalculateFats(totalCalories, plan) {
+                if (plan == 1) {
+                    return 0.2 * totalCalories / 9;
+                } else if (plan == 2) {
+                    return 0.3 * totalCalories / 9;
+                } else {
+                    return 0.25 * totalCalories / 9;
+                }
+            }
 
-function CalculateCarbohydrates(totalCalories, proteinIntake, fatIntake) {
-    let remainingCalories = totalCalories - (proteinIntake * 4 + fatIntake * 9);
-    return remainingCalories / 4;
-}
-  
-    </script>
+            function CalculateCarbohydrates(totalCalories, proteinIntake, fatIntake) {
+                let remainingCalories = totalCalories - (proteinIntake * 4 + fatIntake * 9);
+                return remainingCalories / 4;
+            }
+    
+        </script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all the buttons with the 'food-button' class
+            const buttons = document.querySelectorAll('.food-button');
+
+            // Add event listener to each button
+            buttons.forEach(button => {
+                button.addEventListener('mouseover', () => {
+                    // Get the associated popup using the 'popup' class
+                    const popup = button.querySelector('.popup');
+                    popup.style.display = 'block';
+                });
+
+                button.addEventListener('mouseout', () => {
+                    const popup = button.querySelector('.popup');
+                    popup.style.display = 'none';
+                });
+            });
+        });
+        </script>
 </html>

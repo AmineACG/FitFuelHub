@@ -1,0 +1,5 @@
+[+] Unique Username and Email
+[+] Password Confirmation
+[+] email validation :  protect against email header injection attacks
+[+] password validation and policy
+[+] User Input Sanitizaion 

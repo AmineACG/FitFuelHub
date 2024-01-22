@@ -37,5 +37,17 @@ function fetchDataFromApi($apiEndpoint, $requestParameters) {
 
     return $apiResponse;
 }
+echo '<input type="hidden" name="meal_name" value="' . $favoriteMeal['meal_name'] . '">';
+                            echo '<input type="hidden" name="calories" value="' . $favoriteMeal['calories'] . '">';
+                            echo '<input type="hidden" name="fat" value="' . $favoriteMeal['fat'] . '">';
+                            echo '<input type="hidden" name="protein" value="' . $favoriteMeal['protein'] . '">';
+                            echo '<input type="hidden" name="carbohydrates" value="' . $favoriteMeal['carbohydrates'] . '">';
+                            echo '<button type="submit"><i class="fas fa-check"></i> Finished</button>';
+                            echo '</form>';
 
+                            // Second form for the "Delete" action
+                            echo '<form method="post" action="delete-favorite.php">';
+                            echo '<input type="hidden" name="id" value="' . $favoriteMeal['id'] . '">';
+                            echo '<button class="delete" type="submit"><i class="fas fa-times"></i> Delete</button>';
+                            echo '</form>';
 ?>

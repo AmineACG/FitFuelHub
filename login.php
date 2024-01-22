@@ -21,14 +21,20 @@ try {
 }
 
 // Handle form submission
+if (isset($_COOKIE['credentials'])) {
+    $credentialsData = json_decode($_COOKIE['credentials'], true);
+}else{
+    $credentialsData['username'] = "";
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data
     $username = $_POST['username'];
     $password = $_POST['password'];
 
+  
     // Perform basic validation
     if (empty($username) || empty($password)) {
-        $error = "Username and password are required.";
+        $error = "<p style='color:red;'>Username and password are required.</p>";
     } else {
         // Check if the username exists in the database
         $query = "SELECT * FROM user WHERE username = :username";
@@ -43,9 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (password_verify($password, $user['password'])) {
                 // Store user ID in session
                 $_SESSION['user_id'] = $user['user_id'];
-
+                $credentials = [
+                    'username' => $_POST['username'],
+                    'password' => $_POST['password'],
+                ];
+                $jsonData = json_encode($credentials);
+                setcookie('credentials', $jsonData, time() + (86400 *3), '/'); // Cookie expires in 1 day     
+                $user_id = $_SESSION['user_id']; // Retrieve user's ID from session or wherever
+            
                 // Redirect to the home page
-                header("Location: home.php");
+                header("Location: recipes.php");
                 exit();
             } else {
                 $error = "Invalid username or password.";
@@ -53,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <nav class="navbar">
     <a href="home.php" class="logo">
-        <a href="#" class="logo"><img class="logo" src="images/logo.png"><img>  </a>
+        <a href="home.php" class="logo"><img class="logo" src="images/logo.png"><img>  </a>
         </a>
     </nav>
     <main class="sign-form">
@@ -77,10 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if (isset($error)) { ?>
                     <p class="error-message"><?php echo $error; ?></p>
                 <?php } ?>
-
                 <div class="form-group">
                     <label for="username"><strong>Username</strong></label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" value="<?php echo $credentialsData['username'];?>" required>
                 </div>
                 <div class="form-group">
                     <label for="password"><strong>Password</strong></label>

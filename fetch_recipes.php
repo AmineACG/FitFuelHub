@@ -1,5 +1,4 @@
 <?php
-// Replace 'YOUR_EDAMAM_APP_ID' and 'YOUR_EDAMAM_API_KEY' with your actual API credentials
 $api_id = 'f54f0db5';
 $api_key = '94527f02437544cd169ac13168907cd8';
 

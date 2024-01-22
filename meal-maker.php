@@ -81,6 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -88,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <style>
+    
         .navbar {
             background: linear-gradient(to right, black, #222831);
           padding: 10px;
@@ -98,6 +101,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
+        }
+        .right-portion p{
+            text-align:left;
+            line-height:40px;
+            font-size:22px;
         }
 
         .right-portion label {
@@ -174,7 +182,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 .popup-content div {
     line-height: 1.5;
 }
+.section-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+        gap: 30px;
+    }
+    .food-container {
+        height: 300px; /* Set the desired height of the scrollable area */
+        overflow-y: auto; /* Add vertical scrollbar when needed */
 
+    }
     </style>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -222,13 +239,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     currentProtein += protein;
     currentFat += fat;
     currentCarbs += carbs;
-
+    updateStatusMessage(currentCarbs,currentProtein);
     // Update the buttons with the new nutrient values
     caloriesElement.innerHTML = currentCalories + ' kcal';
     proteinElement.innerHTML = currentProtein + 'g';
     fatElement.innerHTML = currentFat + 'g';
     carbsElement.innerHTML = currentCarbs + 'g';
-
+        
     // Update the hidden input fields with the new nutrient values
     document.getElementById('totalCalories').value = currentCalories;
     document.getElementById('totalProtein').value = currentProtein;
@@ -240,8 +257,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     newButton.innerText = foodName;
     addedFoodsElement.appendChild(newButton);
     }
-     
 
+    // Update the status message based on the conditions
+   
 </script>
     <nav class="navbar">
         <a href="home.php" class="logo"><img class="logo" src="images/logo.png"><img>  </a>
@@ -254,6 +272,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <a href="#">
             <button><i class="fas fa-dumbbell"></i> Training</button>
           </a>
+          <button><a href="profile.php"><i class="fas fa-user"></i> <?php echo $fullName; ?></a></button>
+
         <!--{"Contact Us"}-->
   </nav>
     <section id="section1">
@@ -262,19 +282,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h1>Add To My Meal</h1>
                 <h4>Tip: Select A Diverse Amount of Food</h4>
                 <h4>Foods are measured by 100g</h4>
-                <?php foreach ($foodItems as $food) { ?>
-                    <button class="food-button nutriment-add" onclick="incrementNutrition('<?php echo $food['food_name']; ?>', <?php echo $food['calories']; ?>, <?php echo $food['protein']; ?>, <?php echo $food['fat']; ?>, <?php echo $food['carbohydrates']; ?>);">
-                        <?php echo $food['food_name']; ?>
-                        <div class="popup">
-                            <div class="popup-content">
-                                <div><strong>Calories:</strong> <?php echo $food['calories']; ?>Kcal</div>
-                                <div><strong>Protein:</strong> <?php echo $food['protein']; ?>g</div>
-                                <div><strong>Fat:</strong> <?php echo $food['fat']; ?>g</div>
-                                <div><strong>Carbs:</strong> <?php echo $food['carbohydrates']; ?>g</div>
+                <div class="scroll food-container">
+                    <?php foreach ($foodItems as $food) { ?>
+                        <button class="food-button nutriment-add" onclick="incrementNutrition('<?php echo $food['food_name']; ?>', <?php echo $food['calories']; ?>, <?php echo $food['protein']; ?>, <?php echo $food['fat']; ?>, <?php echo $food['carbohydrates']; ?>);">
+                            <?php echo $food['food_name']; ?>
+                            <div class="popup">
+                                <div class="popup-content">
+                                    <div><strong>Calories:</strong> <?php echo $food['calories']; ?>Kcal</div>
+                                    <div><strong>Protein:</strong> <?php echo $food['protein']; ?>g</div>
+                                    <div><strong>Fat:</strong> <?php echo $food['fat']; ?>g</div>
+                                    <div><strong>Carbs:</strong> <?php echo $food['carbohydrates']; ?>g</div>
+                                </div>
                             </div>
-                        </div>
-                    </button>
-                <?php } ?>
+                        </button>
+                    <?php } ?>
+                </div>
             </div>
             
             <!-- Display the total nutriment values -->
@@ -282,8 +304,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="right-portion">
                 
                 <section style="height: fit-content">
-                <h2>Recommended values for a <?php echo $parsedPlan?> plan Based on your BMI :</h2>
-                </section><br>
+                <h2>Recommended values for a <?php echo $parsedPlan?> Plan Based on your BMI</h2>
+                </section>                
+                <button id="etat">Meal Rating(BETA)<span id="etat"></span></button>
                 <p>Carbohydrates Intake: <span id="carbin"></span>g</p>
                 <button class="nutriment-count" id="nutriment-count-carbs"><?php echo $totalCarbs; ?>g</button>
                 <p>Fat Intake: <span id="fatin"></span>g</p>
@@ -342,16 +365,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     fatIntake = CalculateFats(CaloriesIntake, plan);
                     remainingCalories = CalculateCarbohydrates(CaloriesIntake, proteinIntake, fatIntake);
                     break;
-                // Add more cases for other plans if needed
             }
 
-            // Update HTML elements with the calculated values
             document.getElementById('proin').innerHTML = proteinIntake.toFixed(1);
             document.getElementById('calin').innerHTML = CaloriesIntake.toFixed(1);
             document.getElementById('fatin').innerHTML = fatIntake.toFixed(1);
             document.getElementById('carbin').innerHTML = (remainingCalories / 4).toFixed(1);
 
-            // Functions to calculate intake based on the plan
             function CalculateProteinIntake(w, plan) {
                 if (plan == 1) {
                     return w / 1.5;
@@ -388,7 +408,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
     
         </script>
-        <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Get all the buttons with the 'food-button' class
             const buttons = document.querySelectorAll('.food-button');
@@ -407,5 +427,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 });
             });
         });
+    
+        </script>
+        <script>
+        // Replace this with the action you want to take when the mouse leaves the weight button
+        function updateStatusMessage(currentCalories,currentProtein) {
+            var etatElement = document.getElementById('etat');
+            var etatButton = document.getElementById('etat');
+            if (plan == 1) {
+                if (currentProtein > parseFloat(document.getElementById('proin').innerHTML) && currentCalories < parseFloat(document.getElementById('carbin').innerHTML)) {
+                    statusMessage = 'Perfect!';
+                    etatButton.style.backgroundColor = 'green';
+
+                } else {
+                    statusMessage = 'Good!';
+
+                }
+                if (currentProtein < parseFloat(document.getElementById('proin').innerHTML) && currentCalories > parseFloat(document.getElementById('carbin').innerHTML)) {
+                    statusMessage = 'Can Do Some Changes';
+
+                }
+            } else if (plan == 2) {
+                if (currentProtein > parseFloat(document.getElementById('proin').innerHTML) && currentCalories > parseFloat(document.getElementById('carbin').innerHTML)) {
+                    statusMessage = 'Perfect!';
+                    etatButton.style.backgroundColor = 'green';
+                } else {
+                    statusMessage = 'Good!';
+
+                }
+                if (currentProtein < parseFloat(document.getElementById('proin').innerHTML) && currentCalories < parseFloat(document.getElementById('carbin').innerHTML)) {
+                    statusMessage = 'Can Do Some Changes';
+
+                }
+            }
+
+            // Set the status message to the etatElement.textContent
+            etatElement.textContent = statusMessage;
+        }
         </script>
 </html>

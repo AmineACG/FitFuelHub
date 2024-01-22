@@ -1,3 +1,74 @@
+@media (max-width: 768px) {
+  /* Adjust the styling for smaller screens */
+  .section-content {
+      grid-template-columns: 1fr; /* Change to a single column layout */
+      gap: 20px;
+  }
+  .left-portion,
+  .right-portion {
+      width: 100%; /* Take up full width */
+      grid-template-columns: 1fr; /* Change to a single column layout */
+  }
+  /* Other styles you want to adjust for smaller screens */
+
+
+  /* Common styles for both mobile and larger screens */
+  .navbar {
+      background: linear-gradient(to right, black, #222831);
+      padding: 10px;
+      display: flex;
+      justify-content: space-between; /* Adjust alignment for mobile */
+  }
+
+  .navbar button {
+      border-radius: 0px;
+      background-color: inherit;
+      color: #fff;
+      padding: 10px 20px; /* Adjust padding for mobile */
+      border: none;
+      cursor: pointer;
+      font-size: 8px; /* Adjust font size for mobile */
+  }
+
+  .navbar button:hover {
+      background-color: #424953;
+  }
+
+  .logo {
+      height: auto; /* Allow the logo to scale down */
+      max-height: 80px; /* Set a maximum height for the logo */
+  }
+
+  .right-portion {
+      display: grid;
+      grid-template-columns: 1fr; /* Single column layout on mobile */
+      gap: 10px;
+  }
+
+  .right-portion p {
+      text-align: left;
+      line-height: 30px; /* Adjust line height for mobile */
+      font-size: 18px; /* Adjust font size for mobile */
+  }
+
+  .right-portion label {
+      font-size: 20px; /* Adjust font size for mobile */
+  }
+
+  .right-portion button {
+      border-radius: 15px;
+      background-color: #222831;
+      color: #fff;
+      padding: 15px 20px; /* Adjust padding for mobile */
+      border: none;
+      font-size: 18px; /* Adjust font size for mobile */
+  }
+
+  .addedfoodfield {
+      width: 100%; /* Full width on mobile */
+      border-radius: 15px;
+  }
+}
 body {
   background-color: #EEEEEE;
   margin: 0;
@@ -45,15 +116,7 @@ h1 {
   font-size: 40px;
 }
 
-.section-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 95%;
-  height: 90%;
-  margin: 10px;
-}
+
 
 .left-portion,
 .right-portion {
@@ -92,7 +155,7 @@ button[type="submit"]{
 .navbar button {
   border-radius: 0px;
   background-color: inherit;
-  color: #fff;
+  color: #ffffff;
   padding:fit-content 50px;
   border: none;
   cursor: pointer;
@@ -101,6 +164,7 @@ button[type="submit"]{
 }
 .navbar button:hover{
 background-color: #424953;
+
 }
 .logo{
   height:128px;
@@ -109,6 +173,7 @@ background-color: #424953;
   font-size: 28px;
 }
 button:hover{
+
   background-color: #424953;
 }
 /* Global Styles */

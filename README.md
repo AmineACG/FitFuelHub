@@ -1,7 +1,5 @@
 # FitFuelHub
-Config files for my GitHub profile.
-FitFuelHub - Gym Edition Meal Tracking
-and Inspiration Website
+FitFuelHub - Gym Edition Meal Tracking and Inspiration Website
 Scope
 15 July 2023
 A. Project Presentation
